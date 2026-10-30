@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Financial Reports | Smart Financial Reporting Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <div id="sidebarContainer"></div>
+
+        <div class="main-wrapper">
+            <div id="topbarContainer"></div>
+
+            <main class="content-body">
+                <!-- Page Header -->
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div>
+                        <h1 class="page-title">Smart Financial Reporting Engine</h1>
+                        <p class="page-subtitle">Generate audit-ready P&L statements, Income & Expense schedules, Cash Flow reports, and PDF exports.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="report_history.html" class="btn btn-sm btn-outline-custom">
+                            <i class="bi bi-clock-history me-1"></i> View Saved Reports
+                        </a>
+                        <button class="btn btn-sm btn-primary-custom" onclick="openGenerateModal()">
+                            <i class="bi bi-file-earmark-plus me-1"></i> Generate New Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Report Viewer Container -->
+                <div id="activeReportContainer">
+                    <div class="card-custom p-5 text-center bg-white" id="noReportPlaceholder">
+                        <div class="empty-state">
+                            <div class="empty-state-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+                            <h4 class="empty-state-title">Select or Generate a Financial Report</h4>
+                            <p class="empty-state-text">
+                                Choose from standardized financial report templates including Profit & Loss, Income vs Expenses, and Cash Flow. Reports are calculated dynamically from database records.
+                            </p>
+                            <button class="btn btn-primary-custom" onclick="openGenerateModal()">
+                                <i class="bi bi-magic me-1"></i> Generate Your First Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal fade" id="generateReportModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-plus text-primary me-2"></i>Generate Financial Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="generateReportForm">
+                    <div class="modal-body">
+                        <!-- Template Type Selector -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Report Template *</label>
+                            <select id="repType" class="form-select" required onchange="onReportTypeChange()">
+                                <option value="INCOME_EXPENSE">Income and Expense Report (Summary of all earnings and outlays)</option>
+                                <option value="PROFIT_LOSS" selected>Profit and Loss Statement (P&L - Gross, Operating & Net Profit)</option>
+                                <option value="CASH_FLOW">Cash Flow Statement (Inflows, Outflows, Net Movement & Closing Balance)</option>
+                                <option value="EXPENSE_ANALYSIS">Expense Analysis Report (In-depth cost breakdown by category)</option>
+                                <option value="REVENUE_ANALYSIS">Revenue Analysis Report (Revenue streams & customer trends)</option>
+                                <option value="FINANCIAL_PERFORMANCE">Financial Performance KPIs (Margins, ratios, and growth indicators)</option>
+                                <option value="CUSTOM">Custom Filtered Report</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Custom Title (Optional)</label>
+                            <input type="text" id="repTitle" class="form-control" placeholder="e.g. Q1 2026 Profit & Loss Statement">
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Start Date *</label>
+                                <input type="date" id="repStartDate" class="form-control" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">End Date *</label>
+                                <input type="date" id="repEndDate" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-3" id="cashFlowOptions" style="display: none;">
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">Opening Cash / Bank Balance (For Cash Flow)</label>
+                                <input type="number" id="repOpeningCash" class="form-control" placeholder="0.00" step="0.01" value="0.00">
+                                <small class="text-muted" style="font-size: 0.75rem;">Verified opening bank statement balance at the start of the period.</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Auditor or Internal Notes (Optional)</label>
+                            <textarea id="repNotes" class="form-control" rows="2" placeholder="Document specific accounting assumptions or scope notes..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="generateSubmitBtn" class="btn btn-sm btn-primary-custom">
+                            <span id="genBtnText"><i class="bi bi-play-circle me-1"></i> Generate Report</span>
+                            <span id="genBtnSpinner" class="spinner-border spinner-border-sm d-none ms-1"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/reports.js"></script>
+</body>
+</html>

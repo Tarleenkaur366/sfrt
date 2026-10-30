@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Smart Financial Reporting Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- Sidebar Navigation Container -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Topbar Container -->
+            <div id="topbarContainer"></div>
+
+            <!-- Content Body -->
+            <main class="content-body">
+                <!-- Dashboard Header & Action Bar -->
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div>
+                        <h1 class="page-title">Executive Financial Dashboard</h1>
+                        <p class="page-subtitle">Real-time performance metrics and calculated summaries from database records.</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <a href="transactions.html?action=new" class="btn btn-sm btn-primary-custom d-flex align-items-center gap-1">
+                            <i class="bi bi-plus-circle"></i> Add Transaction
+                        </a>
+                        <a href="reports.html?action=new" class="btn btn-sm btn-outline-custom d-flex align-items-center gap-1">
+                            <i class="bi bi-file-earmark-plus"></i> Generate Report
+                        </a>
+                        <a href="imports.html" class="btn btn-sm btn-outline-custom d-flex align-items-center gap-1">
+                            <i class="bi bi-upload"></i> Import CSV
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Financial Alerts Area -->
+                <div id="dashboardAlerts" class="mb-4"></div>
+
+                <!-- KPI Metric Cards Grid -->
+                <div class="row g-3 mb-4">
+                    <!-- Total Income -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Total Income</div>
+                                    <div class="kpi-value text-success" id="kpiTotalIncome">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-success-light text-success">
+                                    <i class="bi bi-arrow-down-left"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Avg. Monthly: <span class="fw-semibold text-dark" id="kpiAvgIncome">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Expenses -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Total Expenses</div>
+                                    <div class="kpi-value text-danger" id="kpiTotalExpenses">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-danger-light text-danger">
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Avg. Monthly: <span class="fw-semibold text-dark" id="kpiAvgExpenses">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Net Surplus / Deficit -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Net Operating Surplus</div>
+                                    <div class="kpi-value text-primary" id="kpiNetSurplus">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-primary-light text-primary">
+                                    <i class="bi bi-wallet2"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Net Cash Movement: <span class="fw-semibold text-dark" id="kpiNetCash">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gross Profit Margin -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Gross Profit Margin</div>
+                                    <div class="kpi-value" id="kpiGrossMargin">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-warning-light text-warning">
+                                    <i class="bi bi-percent"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Gross Profit: <span class="fw-semibold text-dark" id="kpiGrossProfit">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Net Profit Margin -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Net Profit Margin</div>
+                                    <div class="kpi-value" id="kpiNetMargin">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-info-light text-info">
+                                    <i class="bi bi-graph-up"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Net Profit: <span class="fw-semibold text-dark" id="kpiNetProfit">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense to Income Ratio -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Expense / Income Ratio</div>
+                                    <div class="kpi-value" id="kpiExpenseRatio">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-light text-muted">
+                                    <i class="bi bi-pie-chart"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Outflow share of total recognized earnings
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Growth -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Revenue Growth</div>
+                                    <div class="kpi-value" id="kpiRevenueGrowth">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-success-light text-success">
+                                    <i class="bi bi-reception-4"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Period-over-period comparison
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transactions & Reports Counts -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="kpi-title">Recorded Activity</div>
+                                    <div class="kpi-value" id="kpiTxCount">—</div>
+                                </div>
+                                <div class="kpi-icon-wrap bg-light text-dark">
+                                    <i class="bi bi-journal-text"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-helper mt-2">
+                                Reports Generated: <span class="fw-semibold text-dark" id="kpiReportsCount">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1: Income vs Expenses & Monthly Trends -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="card-custom h-100">
+                            <div class="card-header-clean">
+                                <h5 class="card-title-clean">Monthly Performance Trends</h5>
+                                <span class="badge bg-light text-muted border">Income, Expenses & Net Result</span>
+                            </div>
+                            <div class="p-3">
+                                <div class="chart-container" style="min-height: 310px;">
+                                    <canvas id="trendsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card-custom h-100">
+                            <div class="card-header-clean">
+                                <h5 class="card-title-clean">Top Expense Categories</h5>
+                                <a href="expenses.html" class="small text-primary text-decoration-none">View All</a>
+                            </div>
+                            <div class="p-3">
+                                <div class="chart-container" style="min-height: 250px;">
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tables Row: Recent Transactions & Reports -->
+                <div class="row g-4">
+                    <!-- Recent Transactions -->
+                    <div class="col-lg-7">
+                        <div class="card-custom h-100">
+                            <div class="card-header-clean">
+                                <h5 class="card-title-clean">Recent Transactions</h5>
+                                <a href="transactions.html" class="btn btn-sm btn-outline-custom">All Transactions</a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Classification</th>
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentTransactionsTableBody">
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">
+                                                <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                                Loading transactions...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Generated Reports -->
+                    <div class="col-lg-5">
+                        <div class="card-custom h-100">
+                            <div class="card-header-clean">
+                                <h5 class="card-title-clean">Generated Reports</h5>
+                                <a href="report_history.html" class="btn btn-sm btn-outline-custom">Report Archive</a>
+                            </div>
+                            <div class="p-3" id="recentReportsContainer">
+                                <div class="text-center py-4 text-muted">
+                                    <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                    Loading reports...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Management | Smart Financial Reporting Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <div id="sidebarContainer"></div>
+
+        <div class="main-wrapper">
+            <div id="topbarContainer"></div>
+
+            <main class="content-body">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div>
+                        <h1 class="page-title">Expense Management</h1>
+                        <p class="page-subtitle">Control operating costs, overheads, and cost of goods sold with category analytics.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-primary-custom" onclick="openAddExpenseModal()">
+                            <i class="bi bi-plus-circle me-1"></i> Record Expense
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI & Category Breakdown Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-4 col-md-5">
+                        <div class="card-custom p-4 h-100 bg-white">
+                            <div class="kpi-title text-danger"><i class="bi bi-arrow-up-right"></i> Total Recognized Expenses</div>
+                            <div class="kpi-value text-danger my-2" id="totalExpenseVal">—</div>
+                            <div class="small text-muted" id="expenseSubtitle">Operating outlay & direct costs</div>
+                            <hr class="my-3 text-muted opacity-25">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Recorded Outlays:</span>
+                                <strong class="text-dark" id="expenseCountVal">0 txs</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-7">
+                        <div class="card-custom p-3 h-100 bg-white">
+                            <div class="card-title-clean mb-2" style="font-size: 0.95rem;">Outlay Distribution by Category</div>
+                            <div class="chart-container" style="height: 180px;">
+                                <canvas id="expenseCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="card-custom p-3 mb-4 bg-white">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-4 col-sm-6">
+                            <input type="text" id="expenseSearch" class="form-control form-control-sm" placeholder="Search vendor, rent, salary..." oninput="loadExpenseData()">
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <select id="expenseCategoryFilter" class="form-select form-select-sm" onchange="loadExpenseData()">
+                                <option value="">All Expense Categories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-10 d-flex gap-2">
+                            <input type="date" id="expenseStartDate" class="form-control form-control-sm" onchange="loadExpenseData()">
+                            <input type="date" id="expenseEndDate" class="form-control form-control-sm" onchange="loadExpenseData()">
+                        </div>
+                        <div class="col-md-1 col-sm-2">
+                            <button type="button" class="btn btn-sm btn-light border w-100" onclick="resetExpenseFilters()" title="Reset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Card -->
+                <div class="card-custom bg-white">
+                    <div class="card-header-clean">
+                        <h5 class="card-title-clean">Expense Ledger</h5>
+                        <span id="expenseCountBadge" class="badge bg-light text-muted border">0 records</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description & Vendor</th>
+                                    <th>Classification</th>
+                                    <th>Category</th>
+                                    <th>Payment Method</th>
+                                    <th class="text-end">Amount</th>
+                                    <th class="text-center" style="width: 80px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseTbody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">
+                                        <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                        Loading expense records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div class="modal fade" id="expenseModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Record Expense</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="expenseForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Description / Vendor *</label>
+                            <input type="text" id="expDesc" class="form-control" placeholder="e.g. Office Rent, Cloud Server, Payroll" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Amount *</label>
+                                <input type="number" id="expAmount" class="form-control" placeholder="0.00" step="0.01" min="0.01" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Date *</label>
+                                <input type="date" id="expDate" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Classification *</label>
+                                <select id="expType" class="form-select">
+                                    <option value="Operating Expense" selected>Operating Expense (Rent, Salaries, SaaS)</option>
+                                    <option value="Cost of Goods Sold">Cost of Goods Sold (Inventory, Direct Costs)</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Category</label>
+                                <select id="expCategory" class="form-select"></select>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Payment Method</label>
+                                <select id="expMethod" class="form-select">
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="UPI">UPI</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Cheque">Cheque</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Receipt / Ref #</label>
+                                <input type="text" id="expRef" class="form-control" placeholder="REC-9081">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary-custom">Save Expense</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script>
+        let expChart = null;
+        let expModal = null;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            expModal = new bootstrap.Modal(document.getElementById("expenseModal"));
+            document.getElementById("expDate").value = new Date().toISOString().split("T")[0];
+            await loadExpenseCategories();
+            await loadExpenseData();
+        });
+
+        async function loadExpenseCategories() {
+            try {
+                const cats = await API.get("/categories", { category_type: "EXPENSE" });
+                const filterSel = document.getElementById("expenseCategoryFilter");
+                const formSel = document.getElementById("expCategory");
+                filterSel.innerHTML = `<option value="">All Expense Categories</option>`;
+                formSel.innerHTML = "";
+                cats.forEach(c => {
+                    filterSel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                    formSel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                });
+            } catch (e) {}
+        }
+
+        async function loadExpenseData() {
+            const period = getStoredPeriod();
+            const user = API.getCurrentUser() || {};
+            const currency = user.default_currency || "INR";
+
+            const sDate = document.getElementById("expenseStartDate").value || period.start_date;
+            const eDate = document.getElementById("expenseEndDate").value || period.end_date;
+
+            // Summary
+            try {
+                const summary = await API.get("/expenses/summary", { start_date: sDate, end_date: eDate, currency });
+                document.getElementById("totalExpenseVal").textContent = formatMoney(summary.total_expenses, currency);
+                document.getElementById("expenseCountVal").textContent = `${summary.transaction_count} txs`;
+                renderExpenseChart(summary.categories, currency);
+            } catch (e) {}
+
+            // Table
+            try {
+                const res = await API.get("/expenses", {
+                    search: document.getElementById("expenseSearch").value.trim(),
+                    category_id: document.getElementById("expenseCategoryFilter").value,
+                    start_date: sDate,
+                    end_date: eDate,
+                    currency
+                });
+                renderExpenseTable(res.items, currency);
+                document.getElementById("expenseCountBadge").textContent = `${res.total} records`;
+            } catch (err) {
+                document.getElementById("expenseTbody").innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">${err.message}</td></tr>`;
+            }
+        }
+
+        function renderExpenseTable(items, currency) {
+            const tbody = document.getElementById("expenseTbody");
+            if (!items || items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">No expense records recorded for this period.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = items.map(tx => {
+                const isCogs = tx.transaction_type === "Cost of Goods Sold";
+                const badgeClass = isCogs ? "badge-cogs" : "badge-operating-expense";
+                return `
+                    <tr>
+                        <td class="small text-muted text-nowrap">${formatDate(tx.transaction_date)}</td>
+                        <td class="fw-semibold text-dark">${tx.description}</td>
+                        <td><span class="badge-classification ${badgeClass}">${tx.transaction_type}</span></td>
+                        <td class="small text-muted">${tx.category_name || "—"}</td>
+                        <td class="small">${tx.payment_method || "—"}</td>
+                        <td class="text-end fw-bold text-danger text-nowrap">-${formatMoney(tx.amount, currency)}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-light text-danger py-0 px-1 border" onclick="deleteExpense('${tx.id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function renderExpenseChart(categories, currency) {
+            const ctx = document.getElementById("expenseCategoryChart").getContext("2d");
+            if (expChart) expChart.destroy();
+            const labels = categories && categories.length > 0 ? categories.map(c => c.category_name) : ["No Outlays"];
+            const data = categories && categories.length > 0 ? categories.map(c => c.total_amount) : [1];
+
+            expChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "Expense Amount",
+                        data,
+                        backgroundColor: "#ef4444",
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: "y",
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function openAddExpenseModal() {
+            document.getElementById("expDesc").value = "";
+            document.getElementById("expAmount").value = "";
+            expModal.show();
+        }
+
+        document.getElementById("expenseForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const user = API.getCurrentUser() || {};
+            const payload = {
+                description: document.getElementById("expDesc").value.trim(),
+                amount: parseFloat(document.getElementById("expAmount").value),
+                transaction_date: document.getElementById("expDate").value,
+                transaction_type: document.getElementById("expType").value,
+                category_id: document.getElementById("expCategory").value || null,
+                payment_method: document.getElementById("expMethod").value,
+                reference_number: document.getElementById("expRef").value.trim() || null,
+                currency: user.default_currency || "INR"
+            };
+            try {
+                await API.post("/expenses", payload);
+                expModal.hide();
+                showToast("Expense record added.", "success");
+                loadExpenseData();
+            } catch (err) {
+                alert(err.message || "Failed to add expense.");
+            }
+        });
+
+        async function deleteExpense(id) {
+            if (confirm("Delete this expense entry?")) {
+                try {
+                    await API.delete(`/expenses/${id}`);
+                    showToast("Expense record deleted.", "info");
+                    loadExpenseData();
+                } catch (e) {
+                    showToast(e.message, "danger");
+                }
+            }
+        }
+
+        function resetExpenseFilters() {
+            document.getElementById("expenseSearch").value = "";
+            document.getElementById("expenseCategoryFilter").value = "";
+            document.getElementById("expenseStartDate").value = "";
+            document.getElementById("expenseEndDate").value = "";
+            loadExpenseData();
+        }
+    </script>
+</body>
+</html>
