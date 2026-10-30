@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Financial Reporting Tool (SFRT) | Financial Intelligence Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white">
+
+    <!-- Public Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-dark fs-4" href="index.html">
+                <i class="bi bi-graph-up-arrow text-primary fs-3"></i>
+                <span>SmartFRT</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                    <li class="nav-item"><a class="nav-link fw-medium" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link fw-medium" href="#workflow">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link fw-medium" href="#preview">Dashboard Preview</a></li>
+                    <li class="nav-item ms-lg-2"><a class="btn btn-outline-custom" href="login.html">Sign In</a></li>
+                    <li class="nav-item"><a class="btn btn-primary-custom" href="register.html">Get Started Free</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <div class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">
+                <i class="bi bi-shield-check me-1"></i> Production-Ready Financial Analytics & Reporting
+            </div>
+            <h1 class="hero-title">Turn Financial Data into Clear,<br>Actionable Reports.</h1>
+            <p class="hero-subtitle">
+                Organize financial records, understand performance, visualize trends, and generate accurate, audit-compliant financial reports through one intelligent reporting platform.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="register.html" class="btn btn-primary-custom btn-lg px-4 py-2">
+                    Start Reporting Today <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+                <a href="login.html" class="btn btn-outline-custom btn-lg px-4 py-2">
+                    Explore Demo Account
+                </a>
+            </div>
+            <div class="text-muted small mt-3">
+                <i class="bi bi-check-circle-fill text-success me-1"></i> Python Decimal Accuracy &nbsp;|&nbsp;
+                <i class="bi bi-check-circle-fill text-success me-1"></i> Automated Rule-Based Insights &nbsp;|&nbsp;
+                <i class="bi bi-check-circle-fill text-success me-1"></i> Instant PDF & CSV Export
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Dashboard Preview Section -->
+    <section id="preview" class="py-5 bg-light border-top border-bottom">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small">Dashboard Preview</span>
+                <h2 class="fw-bold mt-1">Real-Time Financial Intelligence</h2>
+                <p class="text-muted">Interactive BI dashboard presenting calculated income, expenses, profit margins, and cash flow.</p>
+                <div class="badge bg-warning-light text-warning border px-3 py-1">
+                    <i class="bi bi-info-circle me-1"></i> Illustrated with sample demonstration metrics
+                </div>
+            </div>
+
+            <!-- Preview Mock Dashboard -->
+            <div class="card-custom p-4 shadow-md bg-white">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="kpi-card border-0 bg-light">
+                            <div class="kpi-title text-success"><i class="bi bi-arrow-down-left"></i> Total Income</div>
+                            <div class="kpi-value text-success">₹5,20,000</div>
+                            <div class="kpi-helper">Recognized revenue & earnings</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="kpi-card border-0 bg-light">
+                            <div class="kpi-title text-danger"><i class="bi bi-arrow-up-right"></i> Total Expenses</div>
+                            <div class="kpi-value text-danger">₹2,85,400</div>
+                            <div class="kpi-helper">Operating & inventory outlay</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="kpi-card border-0 bg-light">
+                            <div class="kpi-title text-primary"><i class="bi bi-wallet2"></i> Net Surplus</div>
+                            <div class="kpi-value text-primary">₹2,34,600</div>
+                            <div class="kpi-helper">Positive operational margin</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="kpi-card border-0 bg-light">
+                            <div class="kpi-title text-info"><i class="bi bi-percent"></i> Profit Margin</div>
+                            <div class="kpi-value text-dark">45.1%</div>
+                            <div class="kpi-helper">Net margin on recognized revenue</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-light rounded text-center">
+                    <a href="login.html" class="btn btn-sm btn-primary-custom">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to View Your Actual Database Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section id="features" class="py-5">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small">Comprehensive Capabilities</span>
+                <h2 class="fw-bold mt-1">Built for Accuracy and Simplicity</h2>
+                <p class="text-muted">Designed for business owners, finance teams, and analysts who require rigor without complexity.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card-custom p-4 h-100">
+                        <div class="kpi-icon-wrap bg-primary-light text-primary mb-3">
+                            <i class="bi bi-calculator"></i>
+                        </div>
+                        <h5 class="fw-bold">Python Decimal Engine</h5>
+                        <p class="text-muted small">
+                            Avoids floating-point inaccuracies. All monetary computations are performed using 2-decimal place fixed-point arithmetic with strict accounting classifications.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 h-100">
+                        <div class="kpi-icon-wrap bg-success-light text-success mb-3">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                        </div>
+                        <h5 class="fw-bold">Audit-Ready PDF & CSV</h5>
+                        <p class="text-muted small">
+                            Generate P&L statements, Income & Expense reports, and Cash Flow summaries with executive tables, calculation notes, and disclaimers generated via ReportLab.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 h-100">
+                        <div class="kpi-icon-wrap bg-warning-light text-warning mb-3">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+                        <h5 class="fw-bold">Automated Insights</h5>
+                        <p class="text-muted small">
+                            Deterministic rule engine analyzes expense concentration, period-over-period growth, revenue contraction, and deficit flags with transparent formulas.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 h-100">
+                        <div class="kpi-icon-wrap bg-info-light text-info mb-3">
+                            <i class="bi bi-upload"></i>
+                        </div>
+                        <h5 class="fw-bold">Smart CSV Ingestion</h5>
+                        <p class="text-muted small">
+                            Upload transaction spreadsheets with automated header mapping, row-by-row validation, duplicate detection, and formula-injection defenses.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 h-100">
+                        <div class="kpi-icon-wrap bg-light text-dark mb-3">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <h5 class="fw-bold">User Isolation & Security</h5>
+                        <p class="text-muted small">
+                            Multi-tenant backend with strict user-level data isolation, bcrypt password hashing, HTTP-only session cookies, and SQL injection protections.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 h-100">
+                        <div class="kpi-icon-wrap bg-primary-light text-primary mb-3">
+                            <i class="bi bi-phone"></i>
+                        </div>
+                        <h5 class="fw-bold">Fully Responsive Design</h5>
+                        <p class="text-muted small">
+                            Modern mobile navigation drawer, responsive data tables, and dynamic Chart.js visualizations that work flawlessly across phones, tablets, and desktops.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="py-5 bg-light border-top">
+        <div class="container py-4 text-center">
+            <span class="text-primary fw-bold text-uppercase small">Simple 3-Step Process</span>
+            <h2 class="fw-bold mt-1 mb-5">From Raw Data to Executive Reports</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <div class="display-6 fw-bold text-primary mb-2">01</div>
+                        <h5 class="fw-bold">Record or Import</h5>
+                        <p class="text-muted small">Add transactions via simple intuitive forms or batch import bank/accounting CSV files with automated validation.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <div class="display-6 fw-bold text-primary mb-2">02</div>
+                        <h5 class="fw-bold">Automated Analysis</h5>
+                        <p class="text-muted small">The engine classifies records into Revenue, COGS, and Operating Expenses to calculate profit margins and trends.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <div class="display-6 fw-bold text-primary mb-2">03</div>
+                        <h5 class="fw-bold">Generate & Export</h5>
+                        <p class="text-muted small">Produce professional P&L statements, Cash Flow summaries, and performance reports exported in PDF or CSV format.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <a href="register.html" class="btn btn-primary-custom btn-lg px-4">Create Your Account</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top py-4">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-graph-up-arrow text-primary"></i>
+                <span class="fw-bold">Smart Financial Reporting Tool</span>
+                <span class="text-muted small">© 2026. All rights reserved.</span>
+            </div>
+            <ul class="nav small">
+                <li class="nav-item"><a href="javascript:void(0)" onclick="alert('Privacy Policy: All financial records are isolated to the authenticated user and encrypted in transit.')" class="nav-link px-2 text-muted">Privacy Policy</a></li>
+                <li class="nav-item"><a href="javascript:void(0)" onclick="alert('Terms: Standard software license for local and enterprise financial analysis.')" class="nav-link px-2 text-muted">Terms of Service</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link px-2 text-primary fw-medium">Sign In</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+</body>
+</html>

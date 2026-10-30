@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Smart Financial Reporting Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <div id="sidebarContainer"></div>
+
+        <div class="main-wrapper">
+            <div id="topbarContainer"></div>
+
+            <main class="content-body">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div>
+                        <h1 class="page-title">Account & Application Settings</h1>
+                        <p class="page-subtitle">Configure organization profile, default currency, financial categories, and security credentials.</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Profile & Organization Settings -->
+                    <div class="col-lg-6">
+                        <div class="card-custom p-4 bg-white mb-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-person-gear text-primary me-2"></i>Profile & Entity Settings</h5>
+                            <form id="profileForm">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Email Address (Read-Only)</label>
+                                    <input type="email" id="setProfileEmail" class="form-control bg-light" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Full Name *</label>
+                                    <input type="text" id="setProfileName" class="form-control" required minlength="2">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Business / Organization Name</label>
+                                    <input type="text" id="setProfileBusiness" class="form-control" placeholder="Acme Consulting Ltd">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Default Currency *</label>
+                                    <select id="setProfileCurrency" class="form-select">
+                                        <option value="INR">INR (₹) - Indian Rupee (Default)</option>
+                                        <option value="USD">USD ($) - US Dollar</option>
+                                        <option value="EUR">EUR (€) - Euro</option>
+                                        <option value="GBP">GBP (£) - British Pound</option>
+                                    </select>
+                                    <small class="text-muted d-block mt-1">Single currency reporting policy applies to maintain mathematical accuracy.</small>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary-custom" id="saveProfileBtn">Save Profile Changes</button>
+                            </form>
+                        </div>
+
+                        <!-- Password Change -->
+                        <div class="card-custom p-4 bg-white">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-shield-lock text-primary me-2"></i>Security & Password</h5>
+                            <form id="passwordForm">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Current Password *</label>
+                                    <input type="password" id="currentPass" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">New Password * (Min 8 characters)</label>
+                                    <input type="password" id="newPass" class="form-control" required minlength="8">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Confirm New Password *</label>
+                                    <input type="password" id="confirmPass" class="form-control" required minlength="8">
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-outline-custom" id="changePassBtn">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Custom Categories Management & System Notes -->
+                    <div class="col-lg-6">
+                        <div class="card-custom p-4 bg-white mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold mb-0"><i class="bi bi-tags text-primary me-2"></i>Custom Categories</h5>
+                                <button class="btn btn-sm btn-outline-custom" onclick="openAddCategoryModal()">
+                                    <i class="bi bi-plus-circle me-1"></i> New Category
+                                </button>
+                            </div>
+                            <div class="table-responsive" style="max-height: 320px;">
+                                <table class="table table-custom table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Category Name</th>
+                                            <th>Classification Type</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categoriesTbody">
+                                        <tr><td colspan="3" class="text-center py-3 text-muted">Loading categories...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Accounting Standards Compliance Card -->
+                        <div class="card-custom p-4 bg-white border">
+                            <h6 class="fw-bold text-dark mb-2"><i class="bi bi-journal-check text-success me-2"></i>Accounting Precision Standards</h6>
+                            <ul class="small text-muted ps-3 mb-0">
+                                <li class="mb-1"><strong>Python Decimal Arithmetic:</strong> Exact financial calculations quantized to 2 decimal places to eliminate binary floating point errors.</li>
+                                <li class="mb-1"><strong>Classification Separation:</strong> Transfers, Asset Purchases, and Owner Equity injections are strictly isolated from operational revenue and expenses.</li>
+                                <li class="mb-1"><strong>Division-by-Zero Safeguards:</strong> Percentage change and profit margins are computed only when the mathematical denominator is nonzero.</li>
+                                <li><strong>Formula-Injection Immunity:</strong> Exported CSV text is automatically sanitized to prevent spreadsheet macro injection attacks.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Create Financial Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="categoryForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Category Name *</label>
+                            <input type="text" id="catName" class="form-control" placeholder="e.g. Legal Fees, Advertising, Machinery" required minlength="2">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Category Type *</label>
+                            <select id="catType" class="form-select" required>
+                                <option value="EXPENSE">EXPENSE (Operating Cost)</option>
+                                <option value="INCOME">INCOME (Earnings / Sales)</option>
+                                <option value="TRANSFER">TRANSFER (Bank Account Movement)</option>
+                                <option value="ASSET">ASSET (Capital Purchase / Equipment)</option>
+                                <option value="LIABILITY">LIABILITY (Loans / Debt Payment)</option>
+                                <option value="EQUITY">EQUITY (Owner Funds)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Description (Optional)</label>
+                            <input type="text" id="catDesc" class="form-control" placeholder="Brief note on when this category is applied...">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary-custom">Save Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script>
+        let catModalInstance = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            catModalInstance = new bootstrap.Modal(document.getElementById("categoryModal"));
+            loadUserData();
+            loadCategoriesList();
+        });
+
+        function loadUserData() {
+            const user = API.getCurrentUser() || {};
+            document.getElementById("setProfileEmail").value = user.email || "";
+            document.getElementById("setProfileName").value = user.full_name || "";
+            document.getElementById("setProfileBusiness").value = user.business_name || "";
+            document.getElementById("setProfileCurrency").value = user.default_currency || "INR";
+        }
+
+        async function loadCategoriesList() {
+            const tbody = document.getElementById("categoriesTbody");
+            try {
+                const cats = await API.get("/categories");
+                if (!cats || cats.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-3 text-muted">No custom categories.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = cats.map(c => `
+                    <tr>
+                        <td class="fw-semibold small">${c.name}</td>
+                        <td><span class="badge bg-light text-dark border small">${c.category_type}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-light text-danger py-0 px-1 border" onclick="deleteCategory('${c.id}', '${c.name.replace(/'/g, "\\'")}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join("");
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-3 text-danger">Failed to load categories.</td></tr>`;
+            }
+        }
+
+        document.getElementById("profileForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("saveProfileBtn");
+            btn.disabled = true;
+
+            const payload = {
+                full_name: document.getElementById("setProfileName").value.trim(),
+                business_name: document.getElementById("setProfileBusiness").value.trim() || null,
+                default_currency: document.getElementById("setProfileCurrency").value
+            };
+
+            try {
+                const updated = await API.patch("/auth/profile", payload);
+                const curUser = API.getCurrentUser() || {};
+                API.setSession(null, { ...curUser, ...updated });
+                showToast("Profile settings updated successfully.", "success");
+            } catch (err) {
+                alert(err.message || "Failed to update profile.");
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const curPass = document.getElementById("currentPass").value;
+            const newPass = document.getElementById("newPass").value;
+            const confPass = document.getElementById("confirmPass").value;
+
+            if (newPass !== confPass) {
+                alert("New password and confirmation do not match.");
+                return;
+            }
+
+            const btn = document.getElementById("changePassBtn");
+            btn.disabled = true;
+
+            try {
+                await API.post("/auth/change-password", {
+                    current_password: curPass,
+                    new_password: newPass
+                });
+                showToast("Password updated successfully.", "success");
+                document.getElementById("passwordForm").reset();
+            } catch (err) {
+                alert(err.message || "Password update failed.");
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        function openAddCategoryModal() {
+            document.getElementById("catName").value = "";
+            document.getElementById("catDesc").value = "";
+            catModalInstance.show();
+        }
+
+        document.getElementById("categoryForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById("catName").value.trim(),
+                category_type: document.getElementById("catType").value,
+                description: document.getElementById("catDesc").value.trim() || null
+            };
+
+            try {
+                await API.post("/categories", payload);
+                catModalInstance.hide();
+                showToast("Category created.", "success");
+                loadCategoriesList();
+            } catch (err) {
+                alert(err.message || "Failed to create category.");
+            }
+        });
+
+        async function deleteCategory(id, name) {
+            if (confirm(`Delete category '${name}'? Existing transactions will become Uncategorized.`)) {
+                try {
+                    await API.delete(`/categories/${id}`);
+                    showToast("Category removed.", "info");
+                    loadCategoriesList();
+                } catch (e) {
+                    showToast(e.message, "danger");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

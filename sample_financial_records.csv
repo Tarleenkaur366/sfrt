@@ -1,0 +1,11 @@
+transaction_date,description,transaction_type,category,amount,currency,payment_method,reference_number,notes
+2026-06-02,Client Consulting Retainer,Revenue,Service Revenue,85000.00,INR,Bank Transfer,INV-2026-101,Monthly IT enterprise advisory
+2026-06-05,Commercial Office Lease,Operating Expense,Rent,32000.00,INR,Bank Transfer,RENT-JUN-26,Headquarters lease
+2026-06-10,Staff Salaries Payroll,Operating Expense,Salaries,50000.00,INR,Bank Transfer,PAY-2026-06,Core technical and support staff
+2026-06-12,Product E-Commerce Sales,Revenue,Sales Revenue,64500.00,INR,UPI,ORD-9821,Direct consumer merchandise orders
+2026-06-15,Raw Material Purchase,Cost of Goods Sold,Inventory,21000.00,INR,Bank Transfer,PO-4412,Component inventory shipment
+2026-06-18,Cloud Infrastructure & SaaS,Operating Expense,Software,6800.00,INR,Credit Card,SUB-9021,Hosting & security subscriptions
+2026-06-22,Digital Marketing Campaigns,Operating Expense,Marketing,12500.00,INR,Credit Card,MKT-JUN-01,Paid ad search campaigns
+2026-06-25,Office Electricity & Fiber,Operating Expense,Utilities,4300.00,INR,UPI,UTIL-8812,Utility invoice
+2026-06-28,Freelance Technical Writing,Revenue,Other Income,15000.00,INR,Bank Transfer,INV-2026-102,Quarterly whitepaper drafting
+2026-06-30,Internal Treasury Transfer,Transfer,Bank Transfer,40000.00,INR,Bank Transfer,TRF-0012,Operating account to tax reserve

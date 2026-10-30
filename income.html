@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Management | Smart Financial Reporting Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <div id="sidebarContainer"></div>
+
+        <div class="main-wrapper">
+            <div id="topbarContainer"></div>
+
+            <main class="content-body">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div>
+                        <h1 class="page-title">Income Management</h1>
+                        <p class="page-subtitle">Track, categorize, and analyze incoming recognized earnings, sales, and service revenue.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-primary-custom" onclick="openAddIncomeModal()">
+                            <i class="bi bi-plus-circle me-1"></i> Record Income
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI & Category Breakdown Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-4 col-md-5">
+                        <div class="card-custom p-4 h-100 bg-white">
+                            <div class="kpi-title text-success"><i class="bi bi-arrow-down-left"></i> Total Recognized Income</div>
+                            <div class="kpi-value text-success my-2" id="totalIncomeVal">—</div>
+                            <div class="small text-muted" id="incomeSubtitle">For selected reporting period</div>
+                            <hr class="my-3 text-muted opacity-25">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Recorded Receipts:</span>
+                                <strong class="text-dark" id="incomeCountVal">0 txs</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-7">
+                        <div class="card-custom p-3 h-100 bg-white">
+                            <div class="card-title-clean mb-2" style="font-size: 0.95rem;">Income by Revenue Category</div>
+                            <div class="chart-container" style="height: 180px;">
+                                <canvas id="incomeCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="card-custom p-3 mb-4 bg-white">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-4 col-sm-6">
+                            <input type="text" id="incomeSearch" class="form-control form-control-sm" placeholder="Search customer, invoice, contract..." oninput="loadIncomeData()">
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <select id="incomeCategoryFilter" class="form-select form-select-sm" onchange="loadIncomeData()">
+                                <option value="">All Income Categories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-10 d-flex gap-2">
+                            <input type="date" id="incomeStartDate" class="form-control form-control-sm" onchange="loadIncomeData()">
+                            <input type="date" id="incomeEndDate" class="form-control form-control-sm" onchange="loadIncomeData()">
+                        </div>
+                        <div class="col-md-1 col-sm-2">
+                            <button type="button" class="btn btn-sm btn-light border w-100" onclick="resetIncomeFilters()" title="Reset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Card -->
+                <div class="card-custom bg-white">
+                    <div class="card-header-clean">
+                        <h5 class="card-title-clean">Income Transactions</h5>
+                        <span id="incomeCountBadge" class="badge bg-light text-muted border">0 records</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description & Source</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Method / Ref</th>
+                                    <th class="text-end">Amount</th>
+                                    <th class="text-center" style="width: 80px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomeTbody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">
+                                        <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                        Loading income records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Income Modal -->
+    <div class="modal fade" id="incomeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Record Income</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="incomeForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Description / Client *</label>
+                            <input type="text" id="incDesc" class="form-control" placeholder="e.g. Consulting Contract, Product Sales" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Amount *</label>
+                                <input type="number" id="incAmount" class="form-control" placeholder="0.00" step="0.01" min="0.01" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Date *</label>
+                                <input type="date" id="incDate" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Classification *</label>
+                                <select id="incType" class="form-select">
+                                    <option value="Revenue">Sales / Service Revenue</option>
+                                    <option value="Other Income">Other Income (Interest, etc.)</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Category</label>
+                                <select id="incCategory" class="form-select"></select>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Payment Method</label>
+                                <select id="incMethod" class="form-select">
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="UPI">UPI</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="Cash">Cash</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Invoice / Reference #</label>
+                                <input type="text" id="incRef" class="form-control" placeholder="INV-2026-001">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary-custom">Save Income</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script>
+        let incChart = null;
+        let incModal = null;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            incModal = new bootstrap.Modal(document.getElementById("incomeModal"));
+            document.getElementById("incDate").value = new Date().toISOString().split("T")[0];
+            await loadIncomeCategories();
+            await loadIncomeData();
+        });
+
+        async function loadIncomeCategories() {
+            try {
+                const cats = await API.get("/categories", { category_type: "INCOME" });
+                const filterSel = document.getElementById("incomeCategoryFilter");
+                const formSel = document.getElementById("incCategory");
+                filterSel.innerHTML = `<option value="">All Income Categories</option>`;
+                formSel.innerHTML = "";
+                cats.forEach(c => {
+                    filterSel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                    formSel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                });
+            } catch (e) {}
+        }
+
+        async function loadIncomeData() {
+            const period = getStoredPeriod();
+            const user = API.getCurrentUser() || {};
+            const currency = user.default_currency || "INR";
+
+            const sDate = document.getElementById("incomeStartDate").value || period.start_date;
+            const eDate = document.getElementById("incomeEndDate").value || period.end_date;
+
+            // Summary
+            try {
+                const summary = await API.get("/income/summary", { start_date: sDate, end_date: eDate, currency });
+                document.getElementById("totalIncomeVal").textContent = formatMoney(summary.total_income, currency);
+                document.getElementById("incomeCountVal").textContent = `${summary.transaction_count} txs`;
+                renderIncomeChart(summary.categories, currency);
+            } catch (e) {}
+
+            // Table
+            try {
+                const res = await API.get("/income", {
+                    search: document.getElementById("incomeSearch").value.trim(),
+                    category_id: document.getElementById("incomeCategoryFilter").value,
+                    start_date: sDate,
+                    end_date: eDate,
+                    currency
+                });
+                renderIncomeTable(res.items, currency);
+                document.getElementById("incomeCountBadge").textContent = `${res.total} records`;
+            } catch (err) {
+                document.getElementById("incomeTbody").innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">${err.message}</td></tr>`;
+            }
+        }
+
+        function renderIncomeTable(items, currency) {
+            const tbody = document.getElementById("incomeTbody");
+            if (!items || items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">No income records recorded for this period.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = items.map(tx => `
+                <tr>
+                    <td class="small text-muted text-nowrap">${formatDate(tx.transaction_date)}</td>
+                    <td class="fw-semibold text-dark">${tx.description}</td>
+                    <td><span class="badge-classification badge-revenue">${tx.transaction_type}</span></td>
+                    <td class="small text-muted">${tx.category_name || "—"}</td>
+                    <td class="small">${tx.payment_method || "—"}</td>
+                    <td class="text-end fw-bold text-success text-nowrap">+${formatMoney(tx.amount, currency)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-light text-danger py-0 px-1 border" onclick="deleteIncome('${tx.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        function renderIncomeChart(categories, currency) {
+            const ctx = document.getElementById("incomeCategoryChart").getContext("2d");
+            if (incChart) incChart.destroy();
+            const labels = categories && categories.length > 0 ? categories.map(c => c.category_name) : ["No Data"];
+            const data = categories && categories.length > 0 ? categories.map(c => c.total_amount) : [1];
+
+            incChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "Income Amount",
+                        data,
+                        backgroundColor: "#10b981",
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: "y",
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function openAddIncomeModal() {
+            document.getElementById("incDesc").value = "";
+            document.getElementById("incAmount").value = "";
+            incModal.show();
+        }
+
+        document.getElementById("incomeForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const user = API.getCurrentUser() || {};
+            const payload = {
+                description: document.getElementById("incDesc").value.trim(),
+                amount: parseFloat(document.getElementById("incAmount").value),
+                transaction_date: document.getElementById("incDate").value,
+                transaction_type: document.getElementById("incType").value,
+                category_id: document.getElementById("incCategory").value || null,
+                payment_method: document.getElementById("incMethod").value,
+                reference_number: document.getElementById("incRef").value.trim() || null,
+                currency: user.default_currency || "INR"
+            };
+            try {
+                await API.post("/income", payload);
+                incModal.hide();
+                showToast("Income record added.", "success");
+                loadIncomeData();
+            } catch (err) {
+                alert(err.message || "Failed to add income.");
+            }
+        });
+
+        async function deleteIncome(id) {
+            if (confirm("Delete this income entry?")) {
+                try {
+                    await API.delete(`/income/${id}`);
+                    showToast("Income record deleted.", "info");
+                    loadIncomeData();
+                } catch (e) {
+                    showToast(e.message, "danger");
+                }
+            }
+        }
+
+        function resetIncomeFilters() {
+            document.getElementById("incomeSearch").value = "";
+            document.getElementById("incomeCategoryFilter").value = "";
+            document.getElementById("incomeStartDate").value = "";
+            document.getElementById("incomeEndDate").value = "";
+            loadIncomeData();
+        }
+    </script>
+</body>
+</html>
